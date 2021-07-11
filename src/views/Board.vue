@@ -19,7 +19,6 @@ export default Vue.extend({
   },
   computed: {
     board() {
-      console.log(this.$store.state.board.lists);
       return this.$store.state.board;
     },
   },
