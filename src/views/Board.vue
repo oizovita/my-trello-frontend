@@ -23,7 +23,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$store.dispatch('getBoard', { id: this.$route.params.board_id });
+    await this.$store.dispatch('getBoard', this.$route.params.board_id);
   },
 });
 </script>
