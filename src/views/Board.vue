@@ -1,6 +1,5 @@
 <template>
-  <div class="ui">
-    <nav class="navbar app">My Trello</nav>
+  <div>
     <nav class="navbar board">{{ title }}</nav>
     <div class="lists">
         <List v-for="list in lists" :title="list.title" :cards="list.cards" :key="list.id"/>
@@ -60,22 +59,10 @@ $gap: 10px;
 $board-bg-color: #0079bf;
 $appbar-bg-color: #0067a3;
 
-.ui {
-  height: 100vh;
-  display: grid;
-  grid-template-rows: $appbar-height $navbar-height 1fr;
-  background-color: $board-bg-color;
-  color: #eee;
-}
-
 .navbar {
-  padding-left: $gap;
+  padding-left: 10px;
   display: flex;
   align-items: center;
-  &.app {
-    background-color: $appbar-bg-color;
-    font-size: 1.5rem;
-  }
   &.board {
     font-size: 1.1rem;
   }
@@ -98,8 +85,8 @@ $appbar-bg-color: #0067a3;
   width: 300px;
   height: 50px;
   font-size: 16px;
-  background-color: #006aa7;
-  color: #a5cae0;
+  background-color: #e2e4e6;
+  color: #333333;
   padding: 10px;
   border-radius: 0.3rem;
   cursor: pointer;
@@ -107,6 +94,6 @@ $appbar-bg-color: #0067a3;
 }
 
 .add-list-btn:hover {
-  background-color: #005485;
+  background-color: #838c91;
 }
 </style>

@@ -1,10 +1,25 @@
 <template>
   <div id="app">
-    <div id="nav">
-    </div>
+    <Header></Header>
     <router-view/>
+    <Footer></Footer>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
+
+export default Vue.extend({
+  name: 'App',
+  components: {
+    Header,
+    Footer,
+  },
+});
+
+</script>
 
 <style lang="scss">
 
@@ -14,16 +29,5 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>
