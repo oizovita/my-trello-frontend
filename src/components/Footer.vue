@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <span>&copy; Izovita Oles 2021</span>
+    <span>Izovita Oles 2021</span>
   </footer>
 </template>
 
