@@ -17,21 +17,13 @@ import BoardCard from '@/components/BoardCard.vue';
 export default Vue.extend({
   name: 'Home',
   components: { BoardCard },
-  data() {
-    return {
-      boards: [
-        { id: 1, title: 'покупки' },
-        { id: 2, title: 'подготовка к свадьбе' },
-        { id: 3, title: 'разработка интернет-магазина' },
-        { id: 4, title: 'курс по продвижению в соцсетях' },
-        { id: 4, title: 'курс по продвижению в соцсетях' },
-        { id: 4, title: 'курс по продвижению' },
-        { id: 4, title: 'курс по продвижению' },
-        { id: 4, title: 'курс по продвижению' },
-        { id: 4, title: 'курс по продвижению' },
-
-      ],
-    };
+  computed: {
+    boards() {
+      return this.$store.state.boards;
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch('getBoards');
   },
 });
 </script>
@@ -46,13 +38,13 @@ export default Vue.extend({
 }
 
 .btn-add-board {
-  background-color: #607d8b;
+  background-color: #546E7A;
   border: 0;
   border-radius: 5px;
   box-shadow: 0 0 0 0.5px rgba(49, 49, 93, .03),
   0 2px 5px 0 rgba(49, 49, 93, .1),
   0 1px 2px 0 rgba(0, 0, 0, .08);
-  color: #607d8b;
+  color: #ffffff;
   font-size: 1.2rem;
   margin: 0.5rem 1.5rem;
   outline: 0;
@@ -61,11 +53,6 @@ export default Vue.extend({
   height: 100px;
   width: 100%;
 
-  &:active,
-  &:focus {
-    background-color: #fafafa;
-  }
-
   @media screen and (min-width: 600px) {
     width: 33%;
   }
@@ -73,6 +60,11 @@ export default Vue.extend({
     width: 250px;
   }
 
+}
+
+.btn-add-board:hover {
+  background-color: #838c91;
+  font-weight: bold;
 }
 
 </style>

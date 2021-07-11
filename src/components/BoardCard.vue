@@ -1,7 +1,8 @@
 <template>
-  <div class="board-card">
+
+  <router-link :to="{name: 'Board', params: { board_id: id }}" class="board-card">
     <span class="board-card-title">❏ {{ title }}</span>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
@@ -10,7 +11,7 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'BoardCard',
   props: {
-    id: String,
+    id: Number,
     title: String,
   },
 });

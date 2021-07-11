@@ -1,8 +1,8 @@
 <template>
   <div>
-    <nav class="navbar board">{{ title }}</nav>
+    <nav class="navbar board">{{ board.title }}</nav>
     <div class="lists">
-        <List v-for="list in lists" :title="list.title" :cards="list.cards" :key="list.id"/>
+        <List v-for="list in board.lists" :title="list.title" :cards="list.cards" :key="list.id"/>
         <button class="add-list-btn btn">Add a list...</button>
     </div>
   </div>
@@ -17,37 +17,14 @@ export default Vue.extend({
   components: {
     List,
   },
-  data() {
-    console.log('test');
-    return {
-      title: 'Моя тестовая доска',
-      lists: [
-        {
-          id: 1,
-          title: 'Планы',
-          cards: [
-            { id: 1, title: 'помыть кота' },
-            { id: 2, title: 'приготовить суп' },
-            { id: 3, title: 'сходить в магазин' },
-          ],
-        },
-        {
-          id: 2,
-          title: 'В процессе',
-          cards: [
-            { id: 4, title: 'посмотреть сериал' },
-          ],
-        },
-        {
-          id: 3,
-          title: 'Сделано',
-          cards: [
-            { id: 5, title: 'сделать домашку' },
-            { id: 6, title: 'погулять с собакой' },
-          ],
-        },
-      ],
-    };
+  computed: {
+    board() {
+      console.log(this.$store.state.board.lists);
+      return this.$store.state.board;
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch('getBoard', { id: this.$route.params.board_id });
   },
 });
 </script>
@@ -94,6 +71,6 @@ $appbar-bg-color: #0067a3;
 }
 
 .add-list-btn:hover {
-  background-color: #838c91;
+  background-color: #90a4ae;
 }
 </style>
