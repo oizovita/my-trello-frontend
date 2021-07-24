@@ -1,8 +1,7 @@
 <template>
-
-  <router-link :to="{name: 'Board', params: { board_id: id }}" class="board-card">
-    <span class="board-card-title">❏ {{ title }}</span>
-  </router-link>
+    <router-link :to="{name: 'Board', params: { board_id: id }}" class="board-card">
+      <span class="board-card-title">❏ {{ title }}</span>
+    </router-link>
 </template>
 
 <script lang="ts">

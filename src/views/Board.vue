@@ -1,27 +1,62 @@
 <template>
   <div>
-    <nav class="navbar board">{{ board.title }}</nav>
-    <div class="lists">
-        <List v-for="list in board.lists" :title="list.title" :cards="list.cards" :key="list.id"/>
-        <button class="add-list-btn btn">Add a list...</button>
+    <div class="board-data">
+      <nav v-if="!showInput" class="navbar board" @click="showInput = true">{{ board.title }}</nav>
+      <b-form-input class="title-input"
+                    v-if="showInput"
+                    v-model="title"
+                    @keyup.enter="updateTitle"
+                    @blur="updateTitle"
+                    type="text"
+                    placeholder="Enter new title"
+      ></b-form-input>
+      <BoardSidebar :id="+this.$route.params.board_id"></BoardSidebar>
     </div>
+    <div class="lists">
+      <List v-for="list in board.lists" :title="list.title" :cards="list.cards" :key="list.id"/>
+      <button class="add-list-btn btn">Add a list...</button>
+    </div>
+
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import List from '@/components/List.vue';
+import api from '@/api';
+import BoardSidebar from '@/components/BoardSidebar.vue';
 
 export default Vue.extend({
   name: 'Board',
+  data() {
+    return {
+      title: '',
+      showInput: false,
+    };
+  },
   components: {
-    List,
+    List, BoardSidebar,
   },
   computed: {
     board() {
       return this.$store.state.board;
     },
   },
+  methods: {
+    updateTitle() {
+      api.put(`/board/${this.$route.params.board_id}`, { title: this.title })
+        .then(({ status }) => {
+          if (status === 200) {
+            this.$store.dispatch('getBoard', this.$route.params.board_id);
+          }
+        }, (error) => {
+          this.title = error.response.data.error.message;
+        });
+
+      this.showInput = false;
+    },
+  },
+
   async mounted() {
     await this.$store.dispatch('getBoard', this.$route.params.board_id);
   },
@@ -29,16 +64,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$appbar-height: 40px;
-$navbar-height: 50px;
 $gap: 10px;
-$board-bg-color: #0079bf;
-$appbar-bg-color: #0067a3;
 
 .navbar {
   padding-left: 10px;
   display: flex;
   align-items: center;
+
   &.board {
     font-size: 1.1rem;
   }
@@ -47,10 +79,12 @@ $appbar-bg-color: #0067a3;
 .lists {
   display: flex;
   overflow-x: auto;
+
   > * {
     flex: 0 0 auto;
     margin-left: $gap;
   }
+
   &::after {
     content: '';
     flex: 0 0 $gap;
@@ -71,5 +105,15 @@ $appbar-bg-color: #0067a3;
 
 .add-list-btn:hover {
   background-color: #90a4ae;
+}
+
+.title-input {
+  width: 300px;
+}
+
+.board-data{
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
 }
 </style>
