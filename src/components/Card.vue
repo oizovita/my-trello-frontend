@@ -1,5 +1,5 @@
 <template>
-  <li>
+  <li  @dragstart="startDrag($event)">
     {{ title }}
   </li>
 </template>
@@ -11,6 +11,14 @@ export default Vue.extend({
   name: 'Card',
   props: {
     title: String,
+    id: Number,
+  },
+  methods: {
+    startDrag(evt: DragEvent) {
+      evt.dataTransfer.dropEffect = 'move';
+      evt.dataTransfer.effectAllowed = 'move';
+      evt.dataTransfer.setData('cardID', this.id);
+    },
   },
 });
 </script>

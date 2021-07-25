@@ -22,11 +22,19 @@
         <b-dropdown-item-button @click="deleteList">Delete list</b-dropdown-item-button>
       </b-dropdown>
     </header>
-
-    <ul>
+    <ul class='drop-zone'
+        @drop='onDrop($event, id)'
+        @dragover.prevent
+        @dragenter.prevent
+    >
       <Card v-for="card in cards"
+             class='drag-el'
+            ref="card"
             :key="card.id"
             :title="card.title"
+            :listId="id"
+            :id="card.id"
+            draggable="true"
       />
     </ul>
     <footer>
@@ -104,6 +112,21 @@ export default Vue.extend({
         });
       this.showInputCard = false;
     },
+    onDrop(evt: DragEvent, list) {
+      // console.log(evt.y);
+      // Object.values(this.$refs.card).forEach((v) => {
+      //   console.log(v.$el.getBoundingClientRect().y);
+      // });
+      const cardId = evt.dataTransfer.getData('cardID');
+      api.put(`/board/${this.boardId}/card`, [{ id: cardId, position: 1, list_id: list }])
+        .then(({ status }) => {
+          if (status === 200) {
+            this.$store.dispatch('getBoard', this.boardId);
+          }
+        }, (error) => {
+          console.log(error);
+        });
+    },
   },
 });
 </script>
@@ -174,6 +197,18 @@ $list-bg-color: #e2e4e6;
 
   .title-input{
     margin: 5px
+  }
+
+  .drop-zone {
+    background-color: #eee;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .drag-el {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 5px;
   }
 }
 </style>
