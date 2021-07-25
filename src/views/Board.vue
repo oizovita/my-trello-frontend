@@ -4,19 +4,36 @@
       <nav v-if="!showInput" class="navbar board" @click="showInput = true">{{ board.title }}</nav>
       <b-form-input class="title-input"
                     v-if="showInput"
-                    v-model="title"
+                    v-model="boardTitle"
                     @keyup.enter="updateTitle"
                     @blur="updateTitle"
+                    @keyup.esc="showInput = false"
                     type="text"
                     placeholder="Enter new title"
       ></b-form-input>
-      <BoardSidebar :id="+this.$route.params.board_id"></BoardSidebar>
+      <BoardSidebar :id="board_id"></BoardSidebar>
     </div>
     <div class="lists">
-      <List v-for="list in board.lists" :title="list.title" :cards="list.cards" :key="list.id"/>
-      <button class="add-list-btn btn">Add a list...</button>
+      <List v-for="list in board.lists"
+            :title="list.title"
+            :cards="list.cards"
+            :id="list.id"
+            :boardId="board_id"
+            :key="list.id"
+      />
+      <button v-if="!showInputList"
+              @click="showInputList = true"
+              class="add-list-btn btn">Add a list...
+      </button>
+      <b-form-input class="title-input"
+                    v-if="showInputList"
+                    v-model="listTitle"
+                    @keyup.enter="createList"
+                    @keyup.esc="showInputList = false"
+                    type="text"
+                    placeholder="Enter new title"
+      ></b-form-input>
     </div>
-
   </div>
 </template>
 
@@ -30,8 +47,11 @@ export default Vue.extend({
   name: 'Board',
   data() {
     return {
-      title: '',
+      boardTitle: '',
+      listTitle: '',
       showInput: false,
+      showInputList: false,
+      board_id: +this.$route.params.board_id,
     };
   },
   components: {
@@ -44,21 +64,33 @@ export default Vue.extend({
   },
   methods: {
     updateTitle() {
-      api.put(`/board/${this.$route.params.board_id}`, { title: this.title })
+      api.put(`/board/${this.board_id}`, { title: this.boardTitle })
         .then(({ status }) => {
           if (status === 200) {
-            this.$store.dispatch('getBoard', this.$route.params.board_id);
+            this.$store.dispatch('getBoard', this.board_id);
           }
         }, (error) => {
-          this.title = error.response.data.error.message;
+          this.boardTitle = error.response.data.error.message;
         });
 
       this.showInput = false;
     },
+    createList() {
+      api.post(`/board/${this.board_id}/list`, { title: this.listTitle, position: Object.values(this.board.lists).length })
+        .then(({ status }) => {
+          if (status === 200) {
+            this.listTitle = '';
+            this.$store.dispatch('getBoard', this.board_id);
+          }
+        }, (error) => {
+          this.listTitle = error.response.data.error.message;
+        });
+      this.showInputList = false;
+    },
   },
 
   async mounted() {
-    await this.$store.dispatch('getBoard', this.$route.params.board_id);
+    await this.$store.dispatch('getBoard', this.board_id);
   },
 });
 </script>
@@ -111,7 +143,7 @@ $gap: 10px;
   width: 300px;
 }
 
-.board-data{
+.board-data {
   display: flex;
   padding: 10px;
   justify-content: space-between;
